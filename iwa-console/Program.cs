@@ -53,6 +53,8 @@ namespace iwa_console
             var token = authenticationContext.AcquireTokenAsync(resource, clientId, clientUrl, pp, UserIdentifier.AnyUser).Result;
             Console.WriteLine("Got the token: {0}", token.AccessToken);
 
+
+            ////get sample api data
             HttpClient client = new HttpClient();
 
             SampleConfiguration config = SampleConfiguration.ReadFromJsonFile("appsettings.json");
@@ -74,6 +76,11 @@ namespace iwa_console
                 Console.WriteLine(jsonString);
             }
 
+            //try with helper
+            var protectedApiCallHelper = new ProtectedApiCallHelper(client);
+
+            await CallWebApiAndDisplayResultAsync(protectedApiCallHelper, path.ToString(), token.AccessToken, "SampleAPI:");
+
 
             //now try MS Graph
             resource = "https://graph.microsoft.com";  ///put id or url of resource you're accessing
@@ -85,22 +92,22 @@ namespace iwa_console
             Console.WriteLine("Got the token: {0}", token.AccessToken);
 
 
-            path = new Uri($"{config.MicrosoftGraphBaseEndpoint}/v1.0/me");
+            //path = new Uri($"{config.MicrosoftGraphBaseEndpoint}/v1.0/me");
 
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token.AccessToken);
+            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-            response = await client.GetAsync(path);
+            //response = await client.GetAsync(path);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var jsonString = await response.Content.ReadAsStringAsync();
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var jsonString = await response.Content.ReadAsStringAsync();
 
-                Console.ForegroundColor = ConsoleColor.Green;
+            //    Console.ForegroundColor = ConsoleColor.Green;
 
-                Console.WriteLine(jsonString);
-            }
+            //    Console.WriteLine(jsonString);
+            //}
 
-            var protectedApiCallHelper = new ProtectedApiCallHelper(client);
+            //var protectedApiCallHelper = new ProtectedApiCallHelper(client);
 
 
             path = new Uri($"{config.MicrosoftGraphBaseEndpoint}/v1.0/me");
@@ -136,6 +143,11 @@ namespace iwa_console
         /// <param name="result">Object to display</param>
         private static void Display(JObject result)
         {
+            if (result == null)
+            {
+                return;
+            }
+
             foreach (JProperty child in result.Properties().Where(p => !p.Name.StartsWith("@")))
             {
                 Console.WriteLine($"{child.Name} = {child.Value}");
