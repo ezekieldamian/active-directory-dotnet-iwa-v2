@@ -24,6 +24,7 @@ namespace iwa_console
         /// in Microsoft Azure public clouds or national / sovereign clouds
         /// </summary>
         public string MicrosoftGraphBaseEndpoint { get; set; }
+        public string SampleApiBaseEndpoint { get; set; }
 
         /// <summary>
         /// Reads the configuration from a json file
@@ -46,6 +47,7 @@ namespace iwa_console
             };
             Configuration.Bind("Authentication", config.PublicClientApplicationOptions);
             config.MicrosoftGraphBaseEndpoint = Configuration.GetValue<string>("WebAPI:MicrosoftGraphBaseEndpoint");
+            config.SampleApiBaseEndpoint = Configuration.GetValue<string>("SampleApi:BaseEndpoint");
             return config;
         }
     }

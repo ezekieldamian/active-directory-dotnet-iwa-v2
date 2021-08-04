@@ -46,9 +46,10 @@ namespace iwa_console
         public async Task DisplayMeAndMyManagerAsync()
         {
             AuthenticationResult authenticationResult = await tokenAcquisitionHelper.AcquireTokenFromCacheOrIntegratedWindowAuthenticationAsync(Scopes);
+            //var authenticationResult = await tokenAcquisitionHelper.AcquireTokenAsync(resource, clientId, clientUrl, pp, UserIdentifier.AnyUser).Result;
             if (authenticationResult != null)
             {
-                DisplaySignedInAccount(authenticationResult.Account);
+                //DisplaySignedInAccount(authenticationResult.Account);
 
                 string accessToken = authenticationResult.AccessToken;
                 await CallWebApiAndDisplayResultAsync(WebApiUrlMe, accessToken, "Me");
